@@ -13,8 +13,24 @@ function! s:bytes_offset(line, col) abort
   return line2byte(a:line) + (a:col-2)
 endfunction
 
-function! s:goaddtags(...)
-  update
+function! s:goremovetags(...) abort
+  noau write
+  let l:fname = expand('%:p')
+  let l:cmd = printf('gomodifytags -file %s -offset %d --clear-tags', shellescape(l:fname), s:bytes_offset(line('.'), col('.')))
+  let l:out = system(l:cmd)
+  let l:lines = split(substitute(l:out, "\n$", '', ''), '\n')
+  if v:shell_error != 0
+    echomsg join(l:lines, "\n")
+    return
+  endif
+  let l:view = winsaveview()
+  silent! %d _
+  call setline(1, l:lines)
+  call winrestview(l:view)
+endfunction
+
+function! s:goaddtags(...) abort
+  noau write
   let l:tags = []
   let l:options = []
   for l:tag in split(a:000[0], '\s\+')
@@ -43,3 +59,4 @@ function! s:goaddtags(...)
 endfunction
 
 command! -nargs=1 -buffer GoAddTags call s:goaddtags(<f-args>)
+command! -nargs=0 -buffer GoRemoveTags call s:goremovetags()
