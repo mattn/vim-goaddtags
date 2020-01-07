@@ -14,7 +14,7 @@ function! s:bytes_offset(line, col) abort
 endfunction
 
 function! s:goremovetags(...) abort
-  noau write
+  noau update
   let l:fname = expand('%:p')
   let l:cmd = printf('gomodifytags -file %s -offset %d --clear-tags', shellescape(l:fname), s:bytes_offset(line('.'), col('.')))
   let l:out = system(l:cmd)
@@ -30,7 +30,7 @@ function! s:goremovetags(...) abort
 endfunction
 
 function! s:goaddtags(...) abort
-  noau write
+  noau update
   let l:tags = []
   let l:options = []
   for l:tag in split(a:000[0], '\s\+')
