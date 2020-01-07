@@ -1,4 +1,4 @@
-# vim-goimpl
+# vim-goaddtags
 
 `:GoAddTags` command for Go
 
