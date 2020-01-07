@@ -15,9 +15,21 @@ endfunction
 
 function! s:goaddtags(...)
   update
-  let l:tags = join(split(a:000[0], '\s\+'), ',')
+  let l:tags = []
+  let l:options = []
+  for l:tag in split(a:000[0], '\s\+')
+    let l:token = split(l:tag, ',')
+    call add(l:tags, l:token[0])
+    if len(l:token) == 2
+      call add(l:options, l:token[0] . '=' . l:token[1])
+    endif
+  endfor
+  let l:args = ['--add-tags', join(l:tags, ',')]
+  if !empty(l:options)
+    let l:args += ['--add-options', join(l:options, ' ')]
+  endif
   let l:fname = expand('%:p')
-  let l:cmd = printf('gomodifytags -file %s -offset %d --add-tags %s', shellescape(l:fname), s:bytes_offset(line('.'), col('.')), shellescape(l:tags))
+  let l:cmd = printf('gomodifytags -file %s -offset %d %s', shellescape(l:fname), s:bytes_offset(line('.'), col('.')), join(map(l:args, 'shellescape(v:val)'), ' '))
   let l:out = system(l:cmd)
   let l:lines = split(substitute(l:out, "\n$", '', ''), '\n')
   if v:shell_error != 0
