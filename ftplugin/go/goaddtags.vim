@@ -45,7 +45,8 @@ function! s:goaddtags(...) abort
     let l:args += ['--add-options', join(l:options, ' ')]
   endif
   let l:fname = expand('%:p')
-  let l:cmd = printf('gomodifytags -file %s -offset %d %s', shellescape(l:fname), s:bytes_offset(line('.'), col('.')), join(map(l:args, 'shellescape(v:val)'), ' '))
+  let l:transform = get(g:, 'go_addtags_transform', 'snakecase')
+  let l:cmd = printf('gomodifytags -file %s -offset %d -transform %s %s', shellescape(l:fname), s:bytes_offset(line('.'), col('.')), l:transform, join(map(l:args, 'shellescape(v:val)'), ' '))
   let l:out = system(l:cmd)
   let l:lines = split(substitute(l:out, "\n$", '', ''), '\n')
   if v:shell_error != 0
