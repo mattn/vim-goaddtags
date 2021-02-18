@@ -27,6 +27,12 @@ type Foo struct {
 
 ```
 
+If you prefer to use `camelCase` instead of `snake_case` for the values, you can use the `g:go_addtags_transform` variable to define a different transformation rule. The following example uses the `camelCase` transformation rule.
+
+```vim
+let g:go_addtags_transform = 'camelcase'
+```
+
 ## Installation
 
 
@@ -43,4 +49,3 @@ MIT
 ## Author
 
 Yasuhiro Matsumoto (a.k.a. mattn)
-
